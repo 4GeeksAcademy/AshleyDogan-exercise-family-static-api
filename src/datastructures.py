@@ -9,23 +9,23 @@ update this file to implement the following already declared methods:
 from random import randint
 
 class FamilyStructure:
-    def __init__(self, last_name):
+    def __init__(self, last_name, initial_members: list=[]):
         self.last_name = last_name
-        self._next_id = 1
         self._members = []
+        for member in initial_members:
+            self.add_member(member)
 
     # read-only: Use this method to generate random members ID's when adding members into the list
     def _generateId(self):
-        generated_id = self._next_id
-        self._next_id += 1
-        return generated_id
+        return randint(0, 999999)
 
     def add_member(self, member):
-        member['id'] = self._generateId()
-        member['last_name']  = self.last_name
-        self._members.append(member)
-
-        return member
+        member['last_name'] = self.last_name
+        if 'id' in member:
+            self._members.append(member)
+        else:
+            member['id'] = self._generateId()
+            self._members.append(member)
 
 
     def delete_member(self, id):
@@ -40,6 +40,15 @@ class FamilyStructure:
             if member["id"] == id:
                 return member
         return None
+    
+    # def update_member(self, member):
+    #     for item in self._members:
+    #         if member["id"] == item["id"]:
+    #             item = member
+    #             print(item)
+    #             print(member)
+    #             return True
+    #     return False
 
     # this method is done, it returns a list with all the family members
     def get_all_members(self):

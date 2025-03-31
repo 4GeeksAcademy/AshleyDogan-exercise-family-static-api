@@ -52,38 +52,26 @@ def sitemap():
     return generate_sitemap(app)
 
 @app.route('/members', methods=['GET'])
-def get_all_members():
+def get_members():
     members = jackson_family.get_all_members()
-    response_body = {
-        "family": members
-    }
-    return jsonify(response_body['family']), 200
+    return jsonify(members), 200
 
-@app.route('/members', methods=['POST'])
-def add_new_member():
-    new_family_member = request.json
-    jackson_family.add_member(new_family_member)
-    members = jackson_family.get_all_members()
-    response_body = {
-        "results: members"
-    }
-    return jsonify(response_body), 200
+@app.route('/member', methods=['POST'])
+def create_member():
+    jackson_family.add_member(request.json)
+    return jsonify({}), 200
+
 
 @app.route('/member/<int:id>', methods=['GET'])
-def get_single_member(id):
+def get_member(id):
     member = jackson_family.get_member(id)
     return jsonify(member), 200
 
 
 @app.route('/member/<int:id>', methods=['DELETE'])
-def delete_single_member(id):
-    member = jackson_family.get_member(id)
- 
-    if member:
-        jackson_family.delete_member(id)
-        return jsonify({"message": "Member deleted"}), 200
-    else:
-        return jsonify({"error": "Member not found"}), 404
+def delete_member(id):
+    member = jackson_family.delete_member(id)
+    return jsonify({"done" : True, "deleted_member": member}), 200
 
 # this only runs if `$ python src/app.py` is executed
 if __name__ == '__main__':
